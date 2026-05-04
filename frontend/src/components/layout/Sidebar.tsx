@@ -1,6 +1,7 @@
 "use client";
 
-import { Shield } from "lucide-react";
+import Link from "next/link";
+import { Shield, Sparkles } from "lucide-react";
 
 const QUICK = [
   { label: "Calculate Home Loan EMI", message: "What would my EMI be on a ₹50 lakh home loan at 8.5% for 20 years?" },
@@ -15,12 +16,14 @@ export function Sidebar({
   onNewChat,
   onQuick,
   onCompare,
+  onScenario,
   mobileOpen,
   onCloseMobile,
 }: {
   onNewChat: () => void;
   onQuick: (m: string) => void;
   onCompare: () => void;
+  onScenario: () => void;
   mobileOpen: boolean;
   onCloseMobile: () => void;
 }) {
@@ -34,16 +37,34 @@ export function Sidebar({
         </div>
       </div>
       <div className="mx-4 border-t border-border" />
-      <div className="p-4">
+      <div className="space-y-2 p-4">
+        <Link
+          href="/"
+          onClick={onCloseMobile}
+          className="block w-full rounded-lg border border-slate-200 bg-white py-2 text-center text-sm font-semibold text-ink shadow-sm hover:bg-slate-50"
+        >
+          Marketing home
+        </Link>
         <button
           type="button"
           onClick={() => {
             onNewChat();
             onCloseMobile();
           }}
-          className="w-full rounded-lg bg-primary py-2 text-sm font-medium text-white shadow-sm"
+          className="w-full rounded-lg bg-gradient-to-r from-brand-indigo to-brand-violet py-2 text-sm font-semibold text-white shadow-md"
         >
           New Chat
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            onScenario();
+            onCloseMobile();
+          }}
+          className="flex w-full items-center justify-center gap-2 rounded-lg border border-brand-indigo/30 bg-brand-indigo/10 py-2 text-sm font-semibold text-brand-indigo"
+        >
+          <Sparkles className="h-4 w-4" />
+          Scenario mode
         </button>
       </div>
       <div className="px-4 pb-2 text-xs font-semibold uppercase tracking-wide text-text-secondary">Quick tools</div>

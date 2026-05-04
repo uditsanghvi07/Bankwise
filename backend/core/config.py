@@ -26,7 +26,7 @@ class Settings(BaseSettings):
     max_tokens: int = 2048
     temperature: float = 0.3
     environment: str = "development"
-    cors_origins: str = "http://localhost:3000"
+    cors_origins: str = "http://localhost:9002"
     # When True, unreachable DeepSeek returns a full BankWise-style message instead of a bare error.
     llm_network_fallback: bool = True
 

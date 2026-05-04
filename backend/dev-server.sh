@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Start uvicorn on the first free port in 8000–8002 (avoids "address already in use" when 8000
-# is held by another user/root process). If not 8000, prints the INTERNAL_API_URL for Next.js.
+# Start uvicorn on the first free port in 9001, 9003, 9004 (default API 9001; skips 9002 so a
+# local Next dev server can use the frontend port 9002 on the same machine).
 
 set -euo pipefail
 cd "$(dirname "$0")"
@@ -26,7 +26,7 @@ finally:
 }
 
 PORT=""
-for p in 8000 8001 8002; do
+for p in 9001 9003 9004; do
   if port_free "$p"; then
     PORT="$p"
     break
@@ -34,16 +34,16 @@ for p in 8000 8001 8002; do
 done
 
 if [[ -z "$PORT" ]]; then
-  echo "Ports 8000–8002 are all in use on 127.0.0.1." >&2
-  echo "Free one with (requires sudo):" >&2
-  echo "  sudo fuser -k 8000/tcp" >&2
-  echo "Or find the listener:  ss -tlnp | grep ':8000'" >&2
+  echo "Ports 9001, 9003, and 9004 are all in use on 127.0.0.1." >&2
+  echo "Free one with (requires sudo), e.g.:" >&2
+  echo "  sudo fuser -k 9001/tcp" >&2
+  echo "Or find the listener:  ss -tlnp | grep ':9001'" >&2
   exit 1
 fi
 
-if [[ "$PORT" != "8000" ]]; then
+if [[ "$PORT" != "9001" ]]; then
   echo "================================================================" >&2
-  echo "  Port 8000 is busy — starting API on ${PORT}" >&2
+  echo "  Port 9001 is busy — starting API on ${PORT}" >&2
   echo "  Before \"npm run dev\" in the frontend, run:" >&2
   echo "    export INTERNAL_API_URL=http://127.0.0.1:${PORT}" >&2
   echo "================================================================" >&2

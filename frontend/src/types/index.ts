@@ -12,6 +12,12 @@ export interface WidgetPayload {
   params: Record<string, unknown>;
 }
 
+export interface TraceStep {
+  step: string;
+  detail?: string;
+  meta?: Record<string, unknown>;
+}
+
 export interface Message {
   id: string;
   role: "user" | "assistant";
@@ -19,4 +25,6 @@ export interface Message {
   widget: WidgetPayload | null;
   timestamp: Date;
   regulatoryFootnote?: boolean;
+  /** True while server-sent tokens are still arriving. */
+  streaming?: boolean;
 }

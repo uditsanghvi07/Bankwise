@@ -24,3 +24,5 @@ class ChatResponse(BaseModel):
     widget: WidgetPayload | None = None
     conversation_id: str
     show_regulatory_footnote: bool = False
+    trace: list[dict] = Field(default_factory=list)
+    kb_citations: list[str] = Field(default_factory=list)

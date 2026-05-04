@@ -9,17 +9,18 @@ const SUGGESTIONS = [
 
 export function QuickSuggestions({ onPick }: { onPick: (t: string) => void }) {
   return (
-    <div className="flex flex-wrap justify-center gap-3">
+    <ul className="mx-auto flex w-full flex-col gap-2.5 text-left">
       {SUGGESTIONS.map((s) => (
-        <button
-          key={s}
-          type="button"
-          onClick={() => onPick(s)}
-          className="rounded-full border border-white/80 bg-gradient-to-b from-white to-cream-surface/90 px-4 py-2 text-sm font-medium text-primary shadow-[0_1px_0_rgba(255,255,255,0.9)_inset,0_3px_0_rgba(2,97,116,0.12),0_10px_24px_rgba(2,65,60,0.12)] transition hover:-translate-y-0.5 hover:shadow-[0_1px_0_rgba(255,255,255,0.95)_inset,0_4px_0_rgba(2,97,116,0.14),0_14px_28px_rgba(2,65,60,0.14)]"
-        >
-          {s}
-        </button>
+        <li key={s} className="w-full">
+          <button
+            type="button"
+            onClick={() => onPick(s)}
+            className="w-full rounded-full border border-indigo-200/90 bg-white/90 px-5 py-2.5 text-left text-sm font-medium leading-snug text-ink shadow-[inset_0_1px_0_rgba(255,255,255,1),0_2px_8px_rgba(15,23,42,0.05),0_0_16px_rgba(99,102,241,0.1)] outline-none transition-[border-color,box-shadow,background-color] duration-200 [-webkit-tap-highlight-color:transparent] hover:border-indigo-300 hover:bg-white hover:shadow-[inset_0_1px_0_rgba(255,255,255,1),0_3px_12px_rgba(79,70,229,0.08),0_0_22px_rgba(129,140,248,0.18)] focus-visible:ring-2 focus-visible:ring-brand-indigo/35 focus-visible:ring-offset-2 focus-visible:ring-offset-white active:scale-[0.99]"
+          >
+            {s}
+          </button>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }

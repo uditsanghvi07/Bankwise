@@ -16,7 +16,7 @@ const HOP_BY_HOP = new Set([
 ]);
 
 function upstreamBase(): string {
-  return (process.env.INTERNAL_API_URL ?? "http://127.0.0.1:8000").trim().replace(/\/+$/, "");
+  return (process.env.INTERNAL_API_URL ?? "http://127.0.0.1:9001").trim().replace(/\/+$/, "");
 }
 
 /**
@@ -79,7 +79,7 @@ async function proxy(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json(
       {
         detail:
-          "The UI server could not reach the Python API. If you use Docker, keep INTERNAL_API_URL=http://backend:8000 for the frontend container. If you run `npm run dev`, start the API on port 8000 or set INTERNAL_API_URL to that server.",
+          "The UI server could not reach the Python API. If you use Docker, keep INTERNAL_API_URL=http://backend:9001 for the frontend container. If you run `npm run dev`, start the API on port 9001 or set INTERNAL_API_URL to that server.",
       },
       { status: 502 },
     );

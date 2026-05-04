@@ -2,21 +2,22 @@ services:
   backend:
     build: ./backend
     ports:
-      - "8000:8000"
+      - "9001:9001"
     env_file:
       - .env
     environment:
-      - CORS_ORIGINS=http://localhost:3000
+      - CORS_ORIGINS=http://localhost:9002
 
   frontend:
     build:
       context: ./frontend
       args:
-        INTERNAL_API_URL: http://backend:8000
+        INTERNAL_API_URL: http://backend:9001
     ports:
-      - "3000:3000"
+      - "9002:9002"
     environment:
-      - INTERNAL_API_URL=http://backend:8000
+      - INTERNAL_API_URL=http://backend:9001
+      - PORT=9002
     env_file:
       - frontend/.env.local
     depends_on:

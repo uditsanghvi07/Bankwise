@@ -5,9 +5,9 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "BankWise AI — Banking & Loan Advisory",
+  title: "BankWise AI — GenAI banking console",
   description:
-    "Professional banking and loan advisory assistant for Indian retail banking, loans, credit, and investments.",
+    "LangGraph tool loops, curated RAG, and Decimal calculator engines for Indian retail banking — educational guidance with safety and trace.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

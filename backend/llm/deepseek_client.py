@@ -163,6 +163,79 @@ async def chat_completion(user_message: str, history: list[dict[str, str]]) -> t
     return (str(choice).strip(), elapsed)
 
 
+_PDF_SUMMARY_MAX_TOKENS = 520
+
+
+async def completion_with_system(
+    *,
+    system: str,
+    user: str,
+    max_tokens: int | None = None,
+) -> tuple[str, float]:
+    """Single-turn completion with a custom system prompt (e.g. PDF executive summary)."""
+    settings = get_settings()
+    if not settings.deepseek_api_key:
+        return ("", 0.0)
+
+    mt = min(max_tokens or _PDF_SUMMARY_MAX_TOKENS, settings.max_tokens)
+    messages: list[dict[str, str]] = [
+        {"role": "system", "content": system},
+        {"role": "user", "content": user},
+    ]
+    url = f"{settings.deepseek_base_url.rstrip('/')}/v1/chat/completions"
+    payload: dict[str, Any] = {
+        "model": settings.deepseek_model,
+        "messages": messages,
+        "temperature": 0.3,
+        "max_tokens": mt,
+    }
+    t0 = time.perf_counter()
+    host = urlparse(settings.deepseek_base_url).hostname or settings.deepseek_base_url
+    data: dict[str, Any] | None = None
+    last_net_err: str | None = None
+    _timeout = httpx.Timeout(90.0, connect=20.0, read=80.0, write=20.0, pool=10.0)
+    _limits = httpx.Limits(max_keepalive_connections=4, max_connections=8)
+
+    for attempt in range(2):
+        try:
+            async with httpx.AsyncClient(
+                timeout=_timeout,
+                trust_env=True,
+                http2=False,
+                limits=_limits,
+            ) as client:
+                resp = await client.post(
+                    url,
+                    headers={
+                        "Authorization": f"Bearer {settings.deepseek_api_key}",
+                        "Content-Type": "application/json",
+                    },
+                    content=json.dumps(payload),
+                )
+                resp.raise_for_status()
+                data = resp.json()
+                break
+        except httpx.HTTPStatusError:
+            return ("", time.perf_counter() - t0)
+        except httpx.RequestError as e:
+            last_net_err = f"{type(e).__name__}: {e}"
+            if attempt < 1:
+                await asyncio.sleep(0.4 * (attempt + 1))
+                continue
+            return ("", time.perf_counter() - t0)
+        except Exception:
+            return ("", time.perf_counter() - t0)
+
+    if data is None:
+        return ("", time.perf_counter() - t0)
+    elapsed = time.perf_counter() - t0
+    try:
+        choice = data["choices"][0]["message"]["content"] or ""
+    except (KeyError, IndexError, TypeError):
+        return ("", elapsed)
+    return (str(choice).strip(), elapsed)
+
+
 def should_show_regulatory_footnote(text: str) -> bool:
     low = text.lower()
     triggers = (
